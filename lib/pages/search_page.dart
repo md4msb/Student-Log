@@ -5,7 +5,10 @@ import 'package:student_management_app/widgets/student_card.dart';
 
 // ignore: must_be_immutable
 class SearchPage extends StatelessWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  SearchPage({Key? key}) : super(key: key);
+
+  String searchText = "";
+  List searchResult = [];
 
   @override
   Widget build(BuildContext context) {
@@ -37,30 +40,18 @@ class SearchPage extends StatelessWidget {
             ),
           ),
           onChanged: (value) {
-            Provider.of<StudentProvider>(context,listen: false).searchText = value;
-            // print(Provider.of<StudentProvider>(context,listen: false).searchText);
+            searchText = value;
+            searchResult = Provider.of<StudentProvider>(context, listen: false)
+                .search(searchText);
+            Provider.of<StudentProvider>(context, listen: false).changeImage();
           },
         ),
       ),
       body: Consumer<StudentProvider>(
         builder: (BuildContext context, value, Widget? child) {
-          List students = value.getSudents();
-
-          if (value.searchText.isNotEmpty) {
-            List searchResult = students
-                .where((element) => element.name.toLowerCase().contains(
-                      value.searchText.toLowerCase(),
-                    ))
-                .toList();
+          if (searchText.isNotEmpty) {
             if (searchResult.isNotEmpty) {
-              return
-              //  Center(
-              //   child: Text(
-              //     value.searchText,
-              //     style: TextStyle(color: Colors.black),
-              //   ),
-              // );
-              StudentCard(students: searchResult);
+              return StudentCard(students: searchResult);
             } else {
               return const Center(
                 child: Text(

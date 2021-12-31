@@ -6,7 +6,20 @@ import 'package:student_management_app/database/student_model.dart';
 class StudentProvider with ChangeNotifier {
   Box<StudentModel> box = Boxes.getInstance();
 
-  String searchText = "";
+   String searchText = "";
+
+  
+
+  search(String text) {
+    List students = getSudents();
+    List searchResult = students
+        .where((element) => element.name.toLowerCase().contains(
+              text.toLowerCase(),
+            ))
+        .toList();
+
+    return searchResult;
+  }
 
   addStudent(String name, int age, String domain, pic) async {
     box.add(
@@ -34,5 +47,4 @@ class StudentProvider with ChangeNotifier {
     notifyListeners();
     return true;
   }
-  
 }
